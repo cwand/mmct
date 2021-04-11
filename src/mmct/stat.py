@@ -13,6 +13,7 @@ import mmct.util as util
 def multinomialLLR(x, ref):
   if x.size != ref.size:
     raise ValueError('Input arrays must have the same number of elements')
+
   null_prob = util.normL1(ref)
   n = x.sum()
 
