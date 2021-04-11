@@ -7,11 +7,18 @@ import mmct.mc as mc
 class TestGetMultinomObs(unittest.TestCase):
 
   def test_2d(self):
-    self.assertEqual(0,mc.get_multinom_obs([0.3,0.7],0.29))
-    self.assertEqual(1,mc.get_multinom_obs([0.6,0.4],0.60))
-    self.assertEqual(1,mc.get_multinom_obs([0.98,0.02],0.99))
+    prob = np.array([0.3,1.0])
+    r = np.array([0.90,0.15,0.30,0.22,0.10])
+    m = mc.get_multinom(prob,r)
+    self.assertEqual(2,m.size)
+    self.assertEqual(3,m[0])
+    self.assertEqual(2,m[1])
 
   def test_3d(self):
-    self.assertEqual(0,mc.get_multinom_obs([0.3,0.05,0.65],0.29))
-    self.assertEqual(1,mc.get_multinom_obs([0.3,0.05,0.65],0.32))
-    self.assertEqual(2,mc.get_multinom_obs([0.3,0.05,0.65],0.36))
+    prob = np.array([0.5,0.9,1.0])
+    r = np.array([0.50,0.90,0.15,0.45,0.81,0.46,0.38,0.38])
+    m = mc.get_multinom(prob,r)
+    self.assertEqual(3,m.size)
+    self.assertEqual(5,m[0])
+    self.assertEqual(2,m[1])
+    self.assertEqual(1,m[2])

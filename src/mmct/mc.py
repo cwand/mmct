@@ -2,11 +2,14 @@ import numpy as np
 
 # Monte Carlo utility functions
 
-def get_multinom_obs(prob,r):
+def get_multinom(c_prob,rs):
 
-  i = 0
-  c_prob = prob[0]
-  while c_prob <= r:
-    i += 1
-    c_prob += prob[i]
-  return i
+  res = np.zeros(c_prob.size)
+
+  for r in rs:
+    i = 0
+    while r >= c_prob[i]:
+      i += 1
+    res[i] += 1
+
+  return res
