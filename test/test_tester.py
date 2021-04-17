@@ -130,3 +130,10 @@ class TestTester(unittest.TestCase):
 		p = t.do_test(x,np.array([0.05,0.6,0.1,0.25]))
 
 		self.assertEqual(p,0.6)
+
+
+	def test_tester_do_test_error_x_probs_not_same_dim(self):
+		t = mmct.tester()
+		x = np.array([3,4,5])
+		p = np.array([0.3,0.6,0.05,0.05])
+		self.assertRaises(ValueError, t.do_test,x,p)

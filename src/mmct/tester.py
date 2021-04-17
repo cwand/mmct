@@ -41,6 +41,9 @@ class tester:
 
 	def do_test(self, x, probs):
 
+		if x.size != probs.size:
+			raise ValueError('Input arrays must have the same number of elements')
+
 		n = np.sum(x)
 
 		# Check if a rerun of trials is necessary
