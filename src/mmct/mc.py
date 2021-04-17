@@ -7,6 +7,7 @@ def get_multinom(c_prob,rs):
   res = np.zeros(c_prob.size)
 
   for r in rs:
+    # TODO: binary search since c_prob should be increasing
     i = 0
     while r >= c_prob[i]:
       i += 1

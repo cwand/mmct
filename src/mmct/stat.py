@@ -19,6 +19,7 @@ def multinomialLLR(x, ref):
 
   llr = 0.0
   for i in range(0,x.size):
-    llr += x[i] * math.log(n*null_prob[i]/x[i])
+    if (x[i] != 0):
+      llr += x[i] * math.log(n*null_prob[i]/x[i])
 
   return llr
