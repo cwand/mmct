@@ -18,7 +18,7 @@ The package is most easlily installed via pip:
 
     pip install mmct
 
-The source code is also available on GitHib and is free for use and modification: [mmct on GitHub](ttps://github.com/cwand/mmct/) 
+The source code is also available on GitHub and is free for use and modification: [mmct on GitHub](https://github.com/cwand/mmct/) 
 
 When the package has been installed, a test can be performed following the example below, in which we test whether a set of dice rolls could have been generated from rolling two fair dice 20 times and adding the eyes:
 
@@ -34,6 +34,6 @@ When the package has been installed, a test can be performed following the examp
     t.n_trials = 100000
     pval = do_test(x,p)
    
-   The result of the test will of course vary (unless the random simulator is seeded), but should in general result in a p-value around 0.31, i.e. we cannot reject the hypothesis that the numbers above are taken from a fair dice rolling (which they actually also are).
+   The result of the test will of course vary (unless the random simulator is seeded), but should in general result in a p-value around 0.31, i.e. we cannot reject the hypothesis that the numbers above are taken from a fair dice rolling (which they actually are).
 
 
