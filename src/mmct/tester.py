@@ -23,24 +23,29 @@ def get_multinom(c_prob,rs):
 
 class tester:
 
-	n_trials = 1000
-	statistics = np.zeros(1)
+	n_samples = 1000 # The number of Monte Carlo samples to generate
+	statistics = np.zeros(1) # Test statistics of random samples
+
+	# The test statistics can be fixed by setting fix to True. This prevents
+	# rerunning the Monte Carlo sampling when running a new test. This can
+	# be useful when testing or to save time (bias danger!)
 	fix = False
 
-	def run_trials(self, probs, n):
+
+	def generate_samples(self, probs, n):
 		# First, generate a cumulative sum of the probabilities in ps
 		cps = np.zeros(probs.size)
 		cps[0] = probs[0]
 		for i in range(1,probs.size):
 			cps[i] = cps[i-1] + probs[i]
 
-		# Generate n_trials samples from the underlying distribution of ps
-		self.statistics = np.zeros(self.n_trials)
-		for i in range(0,self.n_trials):
+		# Generate n_samples samples from the underlying distribution of ps
+		self.statistics = np.zeros(self.n_samples)
+		for i in range(0,self.n_samples):
 
 			# Each distribution need n observations
 			rs = np.zeros(n)
-			# Generate n_obs random numbers in [0,1)
+			# Generate n random numbers in [0,1)
 			for j in range(0,n):
 				rs[j] = random.random()
 
@@ -57,8 +62,9 @@ class tester:
 			raise ValueError('Input arrays must have the same number of elements')
 
 
-		# Run trials
-		self.run_trials(probs, np.sum(x))
+		# Run samples if not fixed
+		if not self.fix:
+			self.generate_samples(probs, np.sum(x))
 
 		# Calculate statistic of x
 		x_stat = stat.multinomialLLR(x, probs)

@@ -25,8 +25,8 @@ x = np.array([0, 0, 2, 4, 5, 2, 3, 1, 0, 1, 2])
 p = np.array([1/36, 2/36, 3/36, 4/36, 5/36, 6/36, 5/36, 4/36, 3/36, 2/36, 1/36])
 # Initialise tester:
 t = mmct.tester()
-# Set number of Monte Carlo iterations to perform
-t.n_trials = 100000
+# Set number of Monte Carlo samples to generate
+t.n_samples = 100000
 pval = t.do_test(x,p)
 ```
 
@@ -35,4 +35,3 @@ See the [documentation](documentation.md) for more information.
 ## Contact
 
 If you run into problems or find a bug, you can report it using the bug-tracker in the GitHub repository or [contact the author](mailto:cvvand@gmail.com)
-

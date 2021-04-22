@@ -22,7 +22,7 @@ The following member variables of the tester class can be useful to access or mo
 
 ---
 
-`tester.n_trials` : `int` -- The number of random samples to make during the monte carlo simulation
+`tester.n_samples` : `int` -- The number of random samples to make during the monte carlo simulation
 
 `tester.statistics` : `numpy.ndarray` -- An array of the statistics computed from the monte carlo simulation
 
@@ -34,7 +34,7 @@ To perform the monte carlo simulations and do the test, use the `do_test` functi
 
 ---
 
-`tester.do_test(numpy.ndarray x, numpy.ndarray p)` : `float` -- Tests the hypothesis that the array of observations `x` originates from a multinomial distribution with probabilities given in `p`. This draws `n_trials` random samples from the hypothesised distribution and calculates the test statistic for each of the samples. The sample statistics are inserted into `statistics`. The function returns the p-value which is the fraction of random samples having a poorer test statistic than the item under test.
+`tester.do_test(numpy.ndarray x, numpy.ndarray p)` : `float` -- Tests the hypothesis that the array of observations `x` originates from a multinomial distribution with probabilities given in `p`. This draws `n_samples` random samples from the hypothesised distribution and calculates the test statistic for each of the samples. The sample statistics are inserted into `statistics`. The function returns the p-value which is the fraction of random samples having a poorer test statistic than the item under test.
 
 ---
 

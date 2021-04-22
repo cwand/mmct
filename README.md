@@ -33,12 +33,11 @@ x = np.array([0, 0, 2, 4, 5, 2, 3, 1, 0, 1, 2])
 p = np.array([1/36, 2/36, 3/36, 4/36, 5/36, 6/36, 5/36, 4/36, 3/36, 2/36, 1/36])
 # Initialise tester:
 t = mmct.tester()
-# Set number of Monte Carlo iterations to perform
-t.n_trials = 100000
+# Set number of Monte Carlo samples to generate
+t.n_samples = 100000
 pval = t.do_test(x,p)
 ```
 
 The result of the test will of course vary \(unless the random simulator is seeded\), but should in general result in a p-value around 0.31, i.e. we cannot reject the hypothesis that the numbers above are taken from a fair dice rolling \(which they actually are\).
 
 For more in-depth explanation and code documentation, see the [GitHub Pages](https://cwand.github.io/mmct/)
-

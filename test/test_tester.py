@@ -24,15 +24,15 @@ class TestGetMultinomObs(unittest.TestCase):
 
 class TestTester(unittest.TestCase):
 
-	def test_tester_run_trials(self):
+	def test_tester_run_samples(self):
 		t = mmct.tester()
-		t.n_trials = 10
-		t.run_trials(np.ones(1),1)
+		t.n_samples = 10
+		t.generate_samples(np.ones(1),1)
 		self.assertEqual(t.statistics.size,10)
 
 	def test_tester_do_test_params(self):
 		t = mmct.tester()
-		t.n_trials = 200
+		t.n_samples = 200
 		t.statistics = np.zeros(80)
 
 		x = np.array([3,4,5,6])
@@ -40,17 +40,19 @@ class TestTester(unittest.TestCase):
 
 		self.assertEqual(t.statistics.size,200)
 
-	def test_tester_do_test_no_rerun(self):
+	def test_tester_do_test_no_rerun_when_fixed(self):
 		t = mmct.tester()
-		t.n_trials = 4
+		t.n_samples = 4
 
 		x = np.array([3,4,5,6])
 
 		t.do_test(x,np.array([0.2,0.25,0.3,0.25]))
 
-		# Set artificial and impossible statistics. If run_trials is run, these
+		# Set artificial and impossible statistics. If generate_samples is run, these
 		# values will be overwritten, since they cannot occur mathematically
 		t.statistics = np.array([10,12,14,16])
+
+		t.fix = True
 
 		y = np.array([6,5,4,3])
 
@@ -65,17 +67,18 @@ class TestTester(unittest.TestCase):
 
 	def test_tester_do_test_pvalue(self):
 		t = mmct.tester()
-		t.n_trials = 5
-		t.run_trials(np.array([0.05,0.6,0.1,0.25]), 8)
+		t.n_samples = 5
+		t.generate_samples(np.array([0.05,0.6,0.1,0.25]), 8)
 
 		# null prob: [0.05,0.6,0.1,0.25]
-		# Trial 0: [0,4,2,2]			LLR = -1.1032952365724916
-		# Trial 1: [1,5,2,0]			LLR = -2.9529821682237408
-		# Trial 2: [0,3,2,3]			LLR = -1.6389659003355966
-		# Trial 3: [0,6,2,0]			LLR = -3.1714427716335686
-		# Trial 4: [1,1,5,1]			LLR = -7.8174349521419151
+		# Sample 0: [0,4,2,2]			LLR = -1.1032952365724916
+		# Sample 1: [1,5,2,0]			LLR = -2.9529821682237408
+		# Sample 2: [0,3,2,3]			LLR = -1.6389659003355966
+		# Sample 3: [0,6,2,0]			LLR = -3.1714427716335686
+		# Sample 4: [1,1,5,1]			LLR = -7.8174349521419151
 		t.statistics = np.array([-1.1032952365724916,-2.9529821682237408,
 			-1.6389659003355966,-3.1714427716335686,-7.8174349521419151])
+		t.fix = True
 
 		x = np.array([1,3,1,3])	#	LLR = -0.9458187197756513
 		p = t.do_test(x,np.array([0.05,0.6,0.1,0.25]))
