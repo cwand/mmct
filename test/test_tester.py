@@ -27,19 +27,17 @@ class TestTester(unittest.TestCase):
 	def test_tester_run_trials(self):
 		t = mmct.tester()
 		t.n_trials = 10
-		t.run_trials(np.ones(1))
+		t.run_trials(np.ones(1),1)
 		self.assertEqual(t.statistics.size,10)
 
 	def test_tester_do_test_params(self):
 		t = mmct.tester()
 		t.n_trials = 200
-		t.n_obs = 4
 		t.statistics = np.zeros(80)
 
 		x = np.array([3,4,5,6])
 		p = t.do_test(x,np.array([0.2,0.25,0.3,0.25]))
 
-		self.assertEqual(t.n_obs,18)
 		self.assertEqual(t.statistics.size,200)
 
 	def test_tester_do_test_no_rerun(self):
@@ -65,66 +63,10 @@ class TestTester(unittest.TestCase):
 		self.assertEqual(t.statistics[3],16)
 
 
-	def test_tester_do_rerun_prob_changed(self):
-		t = mmct.tester()
-		t.n_trials = 4
-
-		x = np.array([3,4,5,6])
-
-		t.do_test(x,np.array([0.2,0.25,0.3,0.25]))
-
-		# Set artificial and impossible statistics. If run_trials is run, these
-		# values will be overwritten, since they cannot occur mathematically
-		t.statistics = np.array([10,12,14,16])
-
-		t.do_test(x,np.array([0.25,0.2,0.3,0.25]))
-
-		self.assertEqual(t.statistics.size,4)
-		self.assertNotEqual(t.statistics[0],10)
-		self.assertNotEqual(t.statistics[1],12)
-		self.assertNotEqual(t.statistics[2],14)
-		self.assertNotEqual(t.statistics[3],16)
-
-	def test_tester_do_rerun_n_obs_changed(self):
-		t = mmct.tester()
-		t.n_trials = 4
-
-		x = np.array([3,4,5,6])
-
-		t.do_test(x,np.array([0.2,0.25,0.3,0.25]))
-
-		# Set artificial and impossible statistics. If run_trials is run, these
-		# values will be overwritten, since they cannot occur mathematically
-		t.statistics = np.array([10,12,14,16])
-		x[0] = 4
-
-		t.do_test(x,np.array([0.2,0.25,0.3,0.25]))
-
-		self.assertEqual(t.statistics.size,4)
-		self.assertNotEqual(t.statistics[0],10)
-		self.assertNotEqual(t.statistics[1],12)
-		self.assertNotEqual(t.statistics[2],14)
-		self.assertNotEqual(t.statistics[3],16)
-
-	def test_tester_do_rerun_n_trials_changed(self):
-		t = mmct.tester()
-		t.n_trials = 4
-
-		x = np.array([3,4,5,6])
-
-		t.do_test(x,np.array([0.2,0.25,0.3,0.25]))
-
-		t.n_trials = 5
-
-		t.do_test(x,np.array([0.2,0.25,0.3,0.25]))
-
-		self.assertEqual(t.statistics.size,5)
-
 	def test_tester_do_test_pvalue(self):
 		t = mmct.tester()
 		t.n_trials = 5
-		t.n_obs = 8
-		t.run_trials(np.array([0.05,0.6,0.1,0.25]))
+		t.run_trials(np.array([0.05,0.6,0.1,0.25]), 8)
 
 		# null prob: [0.05,0.6,0.1,0.25]
 		# Trial 0: [0,4,2,2]			LLR = -1.1032952365724916
