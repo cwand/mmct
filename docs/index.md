@@ -30,7 +30,7 @@ t.n_trials = 100000
 pval = t.do_test(x,p)
 ```
 
-See the [documentation]() for more information.
+See the [documentation](documentation.md) for more information.
 
 ## Contact
 
