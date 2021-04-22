@@ -40,3 +40,5 @@ pval = t.do_test(x,p)
 
 The result of the test will of course vary \(unless the random simulator is seeded\), but should in general result in a p-value around 0.31, i.e. we cannot reject the hypothesis that the numbers above are taken from a fair dice rolling \(which they actually are\).
 
+For more in-depth explanation and code documentation, see the [GitHub Pages](https://cwand.github.io/mmct/)
+
