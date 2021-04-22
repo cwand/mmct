@@ -1,37 +1,40 @@
-## Welcome to GitHub Pages
+## Welcome to the mmct documentation site
 
-You can use the [editor on GitHub](https://github.com/cwand/mmct/edit/main/docs/index.md) to maintain and preview the content for your website in Markdown files.
+On this site you can find detailed information about using mmct and code documentation.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
 
-### Markdown
+### Installing mmct
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+mmct is easily installed using pip
 
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+```
+pip install mmct
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+You can also download the source code from GitHub [here](https://github.com/cwand/mmct/).
 
-### Jekyll Themes
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/cwand/mmct/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
 
-### Support or Contact
+### Quick start example
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+The following example shows how to use mmct. We imagine throwing two fair dice and taking the sum of the eyes. We roll the two dice twenty times and get some distribution of the number of eyes rolled. The exercise is to test whether the distribution is in accordance with a multinomial distribution as we would expect from two fair dice.
+
+```
+import mmct
+import numpy as np
+#     Eyes    2  3  4  5  6  7  8  9 10 11 12
+x = np.array([0, 0, 2, 4, 5, 2, 3, 1, 0, 1, 2])
+# Hypothsised probabilities:
+p = np.array([1/36, 2/36, 3/36, 4/36, 5/36, 6/36, 5/36, 4/36, 3/36, 2/36, 1/36])
+# Initialise tester:
+t = mmct.tester()
+# Set number of Monte Carlo iterations to perform
+t.n_trials = 100000
+pval = t.do_test(x,p)
+```
+See the documentation for more information.
+
+
+### Contact
+
+If you run into problems or find a bug, you can report it using the bug-tracker in the GitHub repository or [contact the author](mailto:cvvand@gmail.com)
