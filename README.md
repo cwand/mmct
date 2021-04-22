@@ -32,7 +32,7 @@ When the package has been installed, a test can be performed following the examp
     t = mmct.tester()
     # Set number of Monte Carlo iterations to perform
     t.n_trials = 100000
-    pval = do_test(x,p)
+    pval = t.do_test(x,p)
    
    The result of the test will of course vary (unless the random simulator is seeded), but should in general result in a p-value around 0.31, i.e. we cannot reject the hypothesis that the numbers above are taken from a fair dice rolling (which they actually are).
 
