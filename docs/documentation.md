@@ -97,4 +97,6 @@ multinom = mmct.get_multinom(c_prob, rs)
 
 The following function computes the log-likelihood ratio test statistic that is used for comparing the item under test with the random monte carlo samples.
 
-`stat.multinomialLLR(numpy.ndarray x, numpy.ndarray ref)` : `float` -- Compute the log-likelihood ratio test statistic for a multinomial distribution `x` of observations given a null-hypothesis reference. The reference array will be converted to a set of probabilities and scaled to the same number of observations as there are in `x` automatically.
+`stat.multinomialLLR(numpy.ndarray x, numpy.ndarray ref)` : `float` -- Compute the log-likelihood ratio test statistic for a multinomial distribution `x` of observations given a null-hypothesis reference. The reference array must be a set of probabilities (adding to unity) in order for the function to compute a meaningful result.
+
+mmct uses `scipy.stat.multinomial` to compute the multinomial probability function in case the user has set `tester.test_statistic = 'Prob'`.
