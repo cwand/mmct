@@ -59,7 +59,7 @@ class TestTester(unittest.TestCase):
 		self.assertEqual(t.statistics[3],16)
 
 
-	def test_tester_do_test_pvalue(self):
+	def test_tester_do_test_pvalue_llr(self):
 		t = mmct.tester()
 		t.n_samples = 5
 
@@ -87,6 +87,35 @@ class TestTester(unittest.TestCase):
 		p = t.do_test(x,np.array([0.05,0.6,0.1,0.25]))
 
 		self.assertEqual(p,0.6)
+
+	def test_tester_do_test_pvalue_prob(self):
+		t = mmct.tester()
+		t.test_statistic = 'Prob'
+		t.n_samples = 5
+
+		# null prob: [0.05,0.6,0.1,0.25]
+		# Sample 0: [0,4,2,2]			Prob = 0.03402
+		# Sample 1: [1,5,2,0]			Prob = 0.00653184
+		# Sample 2: [0,3,2,3]			Prob = 0.0189
+		# Sample 3: [0,6,2,0]			Prob = 0.01306368
+		# Sample 4: [1,1,5,1]			LLR = 0.0000252
+		t.statistics = np.array([0.03402,0.00653184,0.0189,0.01306368,0.0000252])
+		t.fix = True
+
+		x = np.array([1,3,1,3])	#	Prob = 0.0189
+		p = t.do_test(x,np.array([0.05,0.6,0.1,0.25]))
+
+		self.assertEqual(p,0.8)
+
+		x = np.array([8,0,0,0]) # Prob = 3.90625 × 10^-11
+		p = t.do_test(x,np.array([0.05,0.6,0.1,0.25]))
+
+		self.assertEqual(p,0.0)
+
+		x = np.array([1,2,2,3])	#	Prob = 0.004725
+		p = t.do_test(x,np.array([0.05,0.6,0.1,0.25]))
+
+		self.assertEqual(p,0.2)
 
 
 	def test_tester_do_test_error_x_probs_not_same_dim(self):

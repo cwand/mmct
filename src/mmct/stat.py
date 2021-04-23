@@ -1,5 +1,6 @@
 import math
 import numpy as np
+from scipy.stats import multinomial
 
 # Computes the log-likelihood ratio for a set of multinomially distributed
 # observations x, compared to a reference (expectation under
@@ -20,3 +21,8 @@ def multinomialLLR(x, ref):
       llr += x[i] * math.log(n*ref[i]/x[i])
 
   return llr
+
+
+def multinomialProb(x, ref):
+	n_obs = np.sum(x)
+	return multinomial.pmf(x, n=n_obs, p=ref)

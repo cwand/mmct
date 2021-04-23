@@ -24,6 +24,8 @@ The following member variables of the tester class can be useful to access or mo
 
 `tester.n_samples` : `int` -- The number of random samples to make during the monte carlo simulation
 
+`tester.test_statistics` : `string` -- The test statistic to use when comparing the item under test with the Monte Carlo samples. Valid choices are `LLR` (default) or `Prob`. `LLR` is the log-likelihood ratio, `Prob` is the multinomial probability function.
+
 `tester.statistics` : `numpy.ndarray` -- An array of the statistics computed from the monte carlo simulation
 
 ---

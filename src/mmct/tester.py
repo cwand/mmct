@@ -29,6 +29,8 @@ class tester:
 	n_samples = 1000 # The number of Monte Carlo samples to generate
 	statistics = np.zeros(1) # Test statistics of random samples
 
+	test_statistic = 'LLR' # The test statistic to use (LLR or Prob)
+
 	# The test statistics can be fixed by setting fix to True. This prevents
 	# rerunning the Monte Carlo sampling when running a new test. This can
 	# be useful when testing or to save time (bias danger!)
@@ -41,7 +43,7 @@ class tester:
 	__n_obs = 0
 
 
-	def generate_sample_LLR(self, index):
+	def generate_sample_stat(self, index):
 
 		# The index argument is irrelevant but necessary to make Pool.map work
 
@@ -55,7 +57,10 @@ class tester:
 		m = get_multinom(self.__c_prob,rs)
 
 		# Calculate test statistic
-		return stat.multinomialLLR(m,self.__prob)
+		if self.test_statistic == 'Prob':
+			return stat.multinomialProb(m,self.__prob)
+		else:
+			return stat.multinomialLLR(m,self.__prob)
 
 
 	def mc_runs(self):
@@ -64,7 +69,7 @@ class tester:
 
 		# Run Monte Carlo simulation:
 		for i in range(0,self.n_samples):
-			self.statistics[i] = self.generate_sample_LLR(i)
+			self.statistics[i] = self.generate_sample_stat(i)
 
 
 	def do_test(self, x, probs):
@@ -89,7 +94,10 @@ class tester:
 
 
 		# Calculate statistic of x
-		x_stat = stat.multinomialLLR(x, probs)
+		if self.test_statistic == 'Prob':
+			x_stat = stat.multinomialProb(x, probs)
+		else:
+			x_stat = stat.multinomialLLR(x, probs)
 
 		# Count number of trials with statistic smaller than x
 		n_smaller = 0
@@ -112,5 +120,5 @@ class mt_tester(tester):
 	def mc_runs(self):
 
 		with Pool(processes=self.threads) as pool:
-			res = pool.map(self.generate_sample_LLR, range(0,self.n_samples))
+			res = pool.map(self.generate_sample_stat, range(0,self.n_samples))
 		self.statistics = np.array(res)
