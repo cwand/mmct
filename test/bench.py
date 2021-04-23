@@ -21,7 +21,7 @@ x = np.array([17,    6,    30,    4,    8,    18,    1,    14])
 t0 = time.time()
 
 tx = mmct.tester()
-tx.n_samples = 80000
+tx.n_samples = 30000
 
 p1 = tx.do_test(x,p)
 print("Calculated p-value: {:.2f}".format(p1))
@@ -29,8 +29,8 @@ print("Calculated p-value: {:.2f}".format(p1))
 t1 = time.time()
 
 ty = mmct.mt_tester()
-ty.threads = 6
-ty.n_samples = 80000
+ty.test_statistic = 'Prob'
+ty.n_samples = 30000
 
 p2 = ty.do_test(x,p)
 print("Calculated p-value: {:.2f}".format(p2))
