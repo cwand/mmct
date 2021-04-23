@@ -24,12 +24,6 @@ class TestGetMultinomObs(unittest.TestCase):
 
 class TestTester(unittest.TestCase):
 
-	def test_tester_run_samples(self):
-		t = mmct.tester()
-		t.n_samples = 10
-		t.generate_samples(np.ones(1),1)
-		self.assertEqual(t.statistics.size,10)
-
 	def test_tester_do_test_params(self):
 		t = mmct.tester()
 		t.n_samples = 200
@@ -68,7 +62,6 @@ class TestTester(unittest.TestCase):
 	def test_tester_do_test_pvalue(self):
 		t = mmct.tester()
 		t.n_samples = 5
-		t.generate_samples(np.array([0.05,0.6,0.1,0.25]), 8)
 
 		# null prob: [0.05,0.6,0.1,0.25]
 		# Sample 0: [0,4,2,2]			LLR = -1.1032952365724916

@@ -3,7 +3,7 @@ import random
 
 from . import stat
 
-# Generate a ultinomially distributed set of observations
+# Generate a multinomially distributed set of observations
 
 def get_multinom(c_prob,rs):
 
@@ -19,6 +19,23 @@ def get_multinom(c_prob,rs):
   return res
 
 
+def generate_sample_LLR(prob, c_prob, n_obs):
+
+	# Each distribution need n observations
+	rs = np.zeros(n_obs)
+	# Generate n random numbers in [0,1)
+	for j in range(0,n_obs):
+		rs[j] = random.random() # Thread safe
+
+	# Generate a multinomial draw from the probabilities in ps (using cps)
+	m = get_multinom(c_prob,rs)
+
+	# Calculate test statistic
+	return stat.multinomialLLR(m,prob)
+
+
+
+
 # Main class used for performing multinomial tests
 
 class tester:
@@ -32,30 +49,6 @@ class tester:
 	fix = False
 
 
-	def generate_samples(self, probs, n):
-		# First, generate a cumulative sum of the probabilities in ps
-		cps = np.zeros(probs.size)
-		cps[0] = probs[0]
-		for i in range(1,probs.size):
-			cps[i] = cps[i-1] + probs[i]
-
-		# Generate n_samples samples from the underlying distribution of ps
-		self.statistics = np.zeros(self.n_samples)
-		for i in range(0,self.n_samples):
-
-			# Each distribution need n observations
-			rs = np.zeros(n)
-			# Generate n random numbers in [0,1)
-			for j in range(0,n):
-				rs[j] = random.random()
-
-			# Generate a multinomial draw from the probabilities in ps (using cps)
-			m = get_multinom(cps,rs)
-
-			# Calculate test statistic
-			self.statistics[i] = stat.multinomialLLR(m,probs)
-
-
 	def do_test(self, x, probs):
 
 		if x.size != probs.size:
@@ -64,7 +57,23 @@ class tester:
 
 		# Run samples if not fixed
 		if not self.fix:
-			self.generate_samples(probs, np.sum(x))
+
+			n = np.sum(x) # Total number of observations in x
+
+			# First, generate a cumulative sum of the probabilities in ps
+			c_prob = np.zeros(probs.size)
+			c_prob[0] = probs[0]
+			for i in range(1,probs.size):
+				c_prob[i] = c_prob[i-1] + probs[i]
+
+			# Reset statistics array
+			self.statistics = np.zeros(self.n_samples)
+
+			# Run Monte Carlo simulation:
+			for i in range(0,self.n_samples):
+				self.statistics[i] = generate_sample_LLR(probs, c_prob, n)
+
+
 
 		# Calculate statistic of x
 		x_stat = stat.multinomialLLR(x, probs)
