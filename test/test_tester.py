@@ -94,3 +94,16 @@ class TestTester(unittest.TestCase):
 		x = np.array([3,4,5])
 		p = np.array([0.3,0.6,0.05,0.05])
 		self.assertRaises(ValueError, t.do_test,x,p)
+
+
+class TestMTTester(unittest.TestCase):
+
+	def test_mttester_do_test_params(self):
+		t = mmct.mt_tester()
+		t.n_samples = 200
+		t.statistics = np.zeros(80)
+
+		x = np.array([3,4,5,6])
+		p = t.do_test(x,np.array([0.2,0.25,0.3,0.25]))
+
+		self.assertEqual(t.statistics.size,200)

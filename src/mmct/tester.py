@@ -1,5 +1,6 @@
 import numpy as np
 import random
+from multiprocessing import Pool
 
 from . import stat
 
@@ -19,21 +20,6 @@ def get_multinom(c_prob,rs):
   return res
 
 
-def generate_sample_LLR(prob, c_prob, n_obs):
-
-	# Each distribution need n observations
-	rs = np.zeros(n_obs)
-	# Generate n random numbers in [0,1)
-	for j in range(0,n_obs):
-		rs[j] = random.random() # Thread safe
-
-	# Generate a multinomial draw from the probabilities in ps (using cps)
-	m = get_multinom(c_prob,rs)
-
-	# Calculate test statistic
-	return stat.multinomialLLR(m,prob)
-
-
 
 
 # Main class used for performing multinomial tests
@@ -49,29 +35,56 @@ class tester:
 	fix = False
 
 
+	# Internal state objects
+	__prob = np.ones(1)
+	__c_prob = np.ones(1)
+	__n_obs = 0
+
+
+	def generate_sample_LLR(self, index):
+
+		# The index argument is irrelevant but necessary to make Pool.map work
+
+		# Each distribution need n observations
+		rs = np.zeros(self.__n_obs)
+		# Generate n random numbers in [0,1)
+		for j in range(0,self.__n_obs):
+			rs[j] = random.random() # Thread safe
+
+		# Generate a multinomial draw from the probabilities in ps (using cps)
+		m = get_multinom(self.__c_prob,rs)
+
+		# Calculate test statistic
+		return stat.multinomialLLR(m,self.__prob)
+
+
+	def mc_runs(self):
+		# Reset statistics array
+		self.statistics = np.zeros(self.n_samples)
+
+		# Run Monte Carlo simulation:
+		for i in range(0,self.n_samples):
+			self.statistics[i] = self.generate_sample_LLR(i)
+
+
 	def do_test(self, x, probs):
 
 		if x.size != probs.size:
 			raise ValueError('Input arrays must have the same number of elements')
 
-
 		# Run samples if not fixed
 		if not self.fix:
 
-			n = np.sum(x) # Total number of observations in x
+			self.__n_obs = np.sum(x) # Total number of observations in x
+			self.__prob = probs.copy()
 
 			# First, generate a cumulative sum of the probabilities in ps
-			c_prob = np.zeros(probs.size)
-			c_prob[0] = probs[0]
+			self.__c_prob = np.zeros(probs.size)
+			self.__c_prob[0] = probs[0]
 			for i in range(1,probs.size):
-				c_prob[i] = c_prob[i-1] + probs[i]
+				self.__c_prob[i] = self.__c_prob[i-1] + probs[i]
 
-			# Reset statistics array
-			self.statistics = np.zeros(self.n_samples)
-
-			# Run Monte Carlo simulation:
-			for i in range(0,self.n_samples):
-				self.statistics[i] = generate_sample_LLR(probs, c_prob, n)
+			self.mc_runs()
 
 
 
@@ -84,3 +97,20 @@ class tester:
 			if s <= x_stat:
 				n_smaller += 1
 		return n_smaller/self.statistics.size
+
+
+
+# Derived class from tester that uses multithreading to speed up the monte carlo
+# sampling
+
+class mt_tester(tester):
+
+	# Number of threads to use. If None, the system default is used
+	# (typically the number of logical processors)
+	threads = None
+
+	def mc_runs(self):
+
+		with Pool(processes=self.threads) as pool:
+			res = pool.map(self.generate_sample_LLR, range(0,self.n_samples))
+		self.statistics = np.array(res)

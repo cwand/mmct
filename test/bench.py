@@ -20,13 +20,24 @@ x = np.array([17,    6,    30,    4,    8,    18,    1,    14])
 
 t0 = time.time()
 
-t = mmct.tester()
-t.n_samples = 80000
+tx = mmct.tester()
+tx.n_samples = 80000
 
-p = t.do_test(x,p)
-print("Calculated p-value: {:.2f}".format(p))
+p1 = tx.do_test(x,p)
+print("Calculated p-value: {:.2f}".format(p1))
 
 t1 = time.time()
 
+ty = mmct.mt_tester()
+ty.threads = 6
+ty.n_samples = 80000
+
+p2 = ty.do_test(x,p)
+print("Calculated p-value: {:.2f}".format(p2))
+
+t2 = time.time()
+
+
 print('')
-print("Time: {:.4f}s".format(t1-t0))
+print("Time 1: {:.4f}s".format(t1-t0))
+print("Time 2: {:.4f}s".format(t2-t1))

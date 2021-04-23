@@ -32,7 +32,7 @@ x = np.array([0, 0, 2, 4, 5, 2, 3, 1, 0, 1, 2])
 # Hypothsised probabilities:
 p = np.array([1/36, 2/36, 3/36, 4/36, 5/36, 6/36, 5/36, 4/36, 3/36, 2/36, 1/36])
 # Initialise tester:
-t = mmct.tester()
+t = mmct.mt_tester() # Use the multithreaded tester class
 # Set number of Monte Carlo samples to generate
 t.n_samples = 100000
 pval = t.do_test(x,p)

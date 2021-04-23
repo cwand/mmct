@@ -38,6 +38,38 @@ To perform the monte carlo simulations and do the test, use the `do_test` functi
 
 ---
 
+### Using multiple threads (`mt_tester`)
+
+Since most computers have multiple processors, the Monte Carlo sampling
+can typically be sped up by running the sampling process in multiple threads.
+mmct supports this feature with the `mt_tester` class, which is a derived class
+from the `tester` class, with the only difference being the parallilsation of
+the sampling process.
+
+#### Constructing the multithreaded tester
+
+Just like its parent class, `mt_tester` has a single constructor with no
+parameters:
+
+---
+
+`mt_tester()` -- Create a new instance of the multithreaded tester class
+
+---
+
+#### Member variables of the multithreaded tester class
+
+The multithreaded tester class inherits the member variables of `tester`, and
+additionally has one member variable:
+
+---
+
+`mt_tester.threads` : `int` -- The number of threads to use. Defaults to `None`,
+in which case the system uses the default amount (usually the number of logical
+processors)
+
+---
+
 ## Other functions
 
 The following functions are not directly related to the act of testing a multinomial distribution, but are still availble from the `mmct` package
