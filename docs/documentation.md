@@ -22,9 +22,10 @@ The following member variables of the tester class can be useful to access or mo
 
 ---
 
-`tester.n_samples` : `int` -- The number of random samples to make during the monte carlo simulation
+`tester.n_samples` : `int` -- The number of random samples to make during the monte carlo simulation. Default is 1000.
 
-`tester.test_statistics` : `string` -- The test statistic to use when comparing the item under test with the Monte Carlo samples. Valid choices are `LLR` (default) or `Prob`. `LLR` is the log-likelihood ratio, `Prob` is the multinomial probability function.
+`tester.test_statistics` : `string` -- The test statistic to use when comparing the item under test with the monte carlo samples. Valid choices are `LLR` (log-likelihood ratio) (default) or `Prob` (probability).
+When using `Prob` the test statistic is simply the probability of the given distribution occuring under the null-hypothesis. When using `LLR` the test statistic is the natural logarithm of a likelihood ratio. The ratio is taken between the probability of each event occuring under the null-hypothesis and the probability of the event occuring under the best alternative probability distribution, which is simply the observed frequency. Equations and detailed explanations for both of these can be found in the documentation of the [XNomial pacakge](https://cran.r-project.org/web/packages/XNomial/vignettes/XNomial.html) for the R programming language.
 
 `tester.statistics` : `numpy.ndarray` -- An array of the statistics computed from the monte carlo simulation
 
@@ -42,7 +43,7 @@ To perform the monte carlo simulations and do the test, use the `do_test` functi
 
 ### Using multiple threads (`mt_tester`)
 
-Since most computers have multiple processors, the Monte Carlo sampling
+Since most computers have multiple processors, the monte carlo sampling
 can typically be sped up by running the sampling process in multiple threads.
 mmct supports this feature with the `mt_tester` class, which is a derived class
 from the `tester` class, with the only difference being the parallilsation of
