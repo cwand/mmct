@@ -2,6 +2,8 @@
 
 Provides functionality for performing multinomial tests using monte carlo simulation
 
+![Tests](https://github.com/cwand/mmct/actions/workflows/tests.yml/badge.svg)
+
 ## Background
 
 This library contain python code that can be used to test whether a given set of observations are likely to be drawn from a multinomial distribution with a given set of parameters \(probabilities for each case\). Specifically, let X = \(x1,x2,...,xk\), where xi is the number of times we observed outcome i. We want to test whether X is taken from a multinomial distribution with probabilities p1, p2,...,pk, where p1,+p2+...+pk = 1. As is standard we quantify the test with a p-value, i.e. the probability of, by pure randomness, to get a result that is as bad or worse than X if the null-hypothesis is true.
