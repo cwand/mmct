@@ -11,17 +11,17 @@ from scipy.stats import multinomial
 
 
 def multinomialLLR(x, ref):
-    if x.size != ref.size:
-        raise ValueError('Input arrays must have the same number of elements')
+	if x.size != ref.size:
+		raise ValueError('Input arrays must have the same number of elements')
 
-    n = x.sum()
-    llr = 0.0
-    for i in range(0, x.size):
-        if (x[i] != 0):
-            llr += x[i] * math.log(n*ref[i]/x[i])
-    return llr
+	n = x.sum()
+	llr = 0.0
+	for i in range(0, x.size):
+		if (x[i] != 0):
+			llr += x[i] * math.log(n * ref[i] / x[i])
+	return llr
 
 
 def multinomialProb(x, ref):
-    n_obs = np.sum(x)
-    return multinomial.pmf(x, n=n_obs, p=ref)
+	n_obs = np.sum(x)
+	return multinomial.pmf(x, n=n_obs, p=ref)

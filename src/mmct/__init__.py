@@ -1,2 +1,1 @@
-from . import tester
-from .tester import *
+from .core import *  # noqa
