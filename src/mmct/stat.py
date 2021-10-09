@@ -2,13 +2,13 @@ import math
 import numpy as np
 from scipy.stats import multinomial
 
+
 # Computes the log-likelihood ratio for a set of multinomially distributed
 # observations x, compared to a reference (expectation under
 # the null-hypothesis). The total number of observations in the two arrays
 # does not need to be the same, although the order of the elements in the
 # arrays matter.
 # Both arrays must be numpy arrays.
-
 
 def multinomialLLR(x, ref):
 	if x.size != ref.size:

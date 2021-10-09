@@ -6,9 +6,7 @@ On this page you can find detailed information about the tester class and useful
 
 The tester class is the main class in the mmct package. It performs the monte carlo simulations and does the actual testing.
 
-#### Constructing the tester class
-
-The tester class has a single constructor method, taking no input parameters:
+#### Constructors
 
 ---
 
@@ -16,9 +14,7 @@ The tester class has a single constructor method, taking no input parameters:
 
 ---
 
-#### Member variables of the tester class
-
-The following member variables of the tester class can be useful to access or modify.
+#### Member variables
 
 ---
 
@@ -31,9 +27,7 @@ When using `Prob` the test statistic is simply the probability of the given dist
 
 ---
 
-#### Running the simulations and performing the test
-
-To perform the monte carlo simulations and do the test, use the `do_test` function:
+#### Member functions
 
 ---
 
@@ -49,10 +43,7 @@ mmct supports this feature with the `mt_tester` class, which is a derived class
 from the `tester` class, with the only difference being the parallilsation of
 the sampling process.
 
-#### Constructing the multithreaded tester
-
-Just like its parent class, `mt_tester` has a single constructor with no
-parameters:
+#### Constructors
 
 ---
 
@@ -60,7 +51,7 @@ parameters:
 
 ---
 
-#### Member variables of the multithreaded tester class
+#### Member variables
 
 The multithreaded tester class inherits the member variables of `tester`, and
 additionally has one member variable:
