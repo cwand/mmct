@@ -16,6 +16,7 @@
 \usepackage[a4paper,top=4.2cm,bottom=4.2cm,left=3.5cm,right=3.5cm]{geometry} % 
 %for setting page size and margins
 \usepackage{csquotes}
+\usepackage{nth}
 
 % Custom macros used in this example document
 \newcommand{\doclink}[2]{\href{#1}{#2}\footnote{\url{#1}}}
@@ -45,15 +46,93 @@ distribution. The name of the package, \mmct, is an abbreviation of
 test is performed using a Monte Carlo simulation. This document describes how 
 this is done and how to interact with the code to perform a test.
 
-%
-%
-%Once you're familiar with the editor, you can find various project settings in 
-%the Overleaf menu, accessed via the button in the very top left of the editor. 
-%To view tutorials, user guides, and further documentation, please visit our 
-%\doclink{https://www.overleaf.com/learn}{help library}. If you haven't used 
-%\LaTeX\ before, our 
-%\doclink{https://www.overleaf.com/learn/latex/Learn_LaTeX_in_30_minutes}{Learn 
-%\LaTeX\ in 30 minutes} tutorial is an excellent place to start.
+The package is inspired by two other software packages, wich boh perform the 
+same job:
+The Python-package \doclink{https://pypi.org/project/met/}{met} is also a 
+Python-package for performing multinomial tests, however \texttt{met} performs 
+an \emph{exact} test. While this strategy is certainly preferred to the Monte 
+Carlo version (which will always be an approximate test), an exact test quickly 
+becomes infeasible as the problem size grows. The other package to have 
+inspired this project is the 
+\doclink{https://cran.r-project.org/web/packages/XNomial/vignettes/XNomial.html}{XNomial}
+package for the R-programming language. \mmct is basically an XNomial-clone for 
+Pyhton.
+
+
+
+\section{Mathematical background}
+
+Assume we have done an experiment in which $N$ observations of a system that 
+can end up in one of $k$ different states has been made (e.g. rolling a D6 20 
+times: $N=20$, $k=6$). We have tracked the number of times each state occurred 
+and denote them $m_1, m_2, \ldots, m_k$, such that $\sum_{i=1}^k m_i = N$.
+
+We want to test the hypothesis that this result is compatible with a 
+multinomial distribution with parameters $N$ and $p_1, p_2, \ldots, p_k$, where 
+$p_i$ is the probability of the state $i$ occurring, where $\sum_{i=1}^k p_i = 
+1$. The result of this test should be a p-value for the null hypothesis that 
+$m_1, \ldots, m_k$ are drawn from this multinomial distribution.
+
+\subsection{Monte Carlo sampling}
+
+The test is performed in two steps: Monte Carlo sampling a bunch of 
+multinomially distributed sets of data, and afterwards determining the 
+likelihood of the original dataset occuring based on the sampled data.
+
+First we write the original data under test as
+\begin{equation}
+X^0 = \left\{ m^0_1, m^0_2, \ldots , m^0_k \right\},
+\end{equation}
+where $m^0_i$ is the number of observations in bin $i$ and again 
+$m^0_1+m^0_2+\ldots+m^0_k = N$.
+
+We start the test by sampling from the hypothesised multinomial distribution 
+$N$ times. 
+We will end up with a number of observations in each of the $k$ bins, each 
+drawn with probability $p_i$, so we end up with
+\begin{equation}
+X^1 = \left\{ m^1_1, m^1_2, \ldots , m^1_k \right\},
+\end{equation}
+such that $m^1_1 + m^1_2 + \ldots + m^1_k = N$. We save this result, and then 
+start over by sampling another $N$ times into a new result:
+\begin{equation}
+X^2 = \left\{ m^2_1, m^2_2, \ldots , m^2_k \right\}.
+\end{equation}
+We continue this process $N_S$ times, ending up with $N_S$ random result 
+vectors $X^j, 1\leq j \leq N_S$, each generated from the same, hypothesised 
+multinomial distribution. If 
+$N_S$ is large enough, we can now estimate the likelihood that $X^0$ (the data 
+under test) is drawn 
+from the same distribution by comparing it to the randomly generated samples.
+
+\subsection{Sample grading}
+
+To do this we need a way of grading our samples to determine what is likely and 
+what is unlikely. The \mmct package implements two different ways of doing this:
+
+\subsubsection{Multinomial probability function}
+
+The first and most obvious way would be to grade each sample by its raw 
+probability of occurring according to the probability distribution. This 
+probability is calculates as
+\begin{align}
+P^j &= \Pr\left(m^j_1, \ldots, m^j_k | N , p_1, \ldots, p_k\right)\\
+&= \frac{N!}{m^j_1! \cdots m^j_k!} p_1^{m^j_1} \cdots p_k^{m^j_k}.
+\end{align}
+Calculating $P$ for all samples and our data under test in this way, we can 
+now rank all the samples from the most likely (largest $P$) to most unlikely 
+(smallest $P$) and look where $P^0$, the rank of the data under test, fits in. 
+The p-value of our test is simply the number of samples with a probability 
+$P^j$ smaller than $P^0$ divided by the total number of samples $N_S$:
+\begin{equation}
+\textrm{p-value} = \frac{N_{\textrm{smaller}}}{N_S}
+\end{equation}
+
+
+\subsubsection{Likelihood ratio}
+
+The second way uses ratios of the likelihood function. 
+
 
 
 \section{Including code samples}
