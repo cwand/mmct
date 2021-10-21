@@ -116,7 +116,8 @@ The first and most obvious way would be to grade each sample by its raw
 probability of occurring according to the probability distribution. This 
 probability is calculates as
 \begin{align}
-P^j &= \Pr\left(m^j_1, \ldots, m^j_k | N , p_1, \ldots, p_k\right)\\
+P^j &= \Pr\left(m^j_1, \ldots, m^j_k | N , p_1, \ldots, p_k\right) \nonumber \\ 
+\label{eq:prob}
 &= \frac{N!}{m^j_1! \cdots m^j_k!} p_1^{m^j_1} \cdots p_k^{m^j_k}.
 \end{align}
 Calculating $P$ for all samples and our data under test in this way, we can 
@@ -131,8 +132,25 @@ $P^j$ smaller than $P^0$ divided by the total number of samples $N_S$:
 
 \subsubsection{Likelihood ratio}
 
-The second way uses ratios of the likelihood function. 
-
+The second way uses likelihood-ratios. For any given Monte Carlo sample $X^j$ 
+we can calculate the likelihood-function $\mathcal{L}$ evaluated as the 
+likelihood of the hypothesised probabilities given the sample $X^j$, which is 
+simply equation \eqref{eq:prob}. In the spirit of the 
+\doclink{https://en.wikipedia.org/wiki/Likelihood-ratio_test}{likelihood-ratio 
+test} we can compare this to an alternate hypothesis. The optimal alternate 
+hypothesis is just to use the probabilities observed in the original data 
+$X^0$, i.e.
+\begin{align*}
+\hat{p}_1 &= \frac{m^0_1}{N} \\
+\hat{p}_2 &= \frac{m^0_2}{N} \\
+& \cdots \\
+\hat{p}_k &= \frac{m^0_k}{N}.
+\end{align*}
+The likelihood function of these probabilities, given the Monte Carlo sample 
+$X^j$, is
+\begin{equation}
+\frac{N!}{m^j_1! \cdots m^j_k!} \hat{p}_1^{m^j_1} \cdots \hat{p}_k^{m^j_k}
+\end{equation}
 
 
 \section{Including code samples}
