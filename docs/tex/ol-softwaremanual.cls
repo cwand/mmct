@@ -12,7 +12,7 @@
 \RequirePackage[T1]{fontenc}
 \RequirePackage[sfdefault]{roboto}
 \RequirePackage[scaled=0.95]{roboto-mono}
-\RequirePackage{sfmath}
+%\RequirePackage{sfmath}
 
 % load the base class with default options
 \LoadClass[12pt,a4paper]{article}
