@@ -1,18 +1,15 @@
 import mmct
 import time
 import numpy as np
-import sys
-sys.path.append("src")
 
 # Hypothsised probability
 
-# Cumulative: 0.10  0.17  0.48  0.52  0.63  0.87, 0.89  1.00
-p = np.array([0.10, 0.07, 0.31, 0.04, 0.11, 0.24, 0.02, 0.11])
+p = np.array([1/36, 2/36, 3/36, 4/36, 5/36, 6/36, 5/36, 4/36, 3/36, 2/36, 1/36])
 
 
 # Observations
 
-x = np.array([17, 6, 30, 4, 8, 18, 1, 14])
+x = np.array([0, 0, 2, 4, 5, 2, 3, 1, 0, 1, 2])
 
 
 t0 = time.time()
@@ -21,20 +18,10 @@ tx = mmct.tester()
 tx.n_samples = 30000
 
 p1 = tx.do_test(x, p)
-print("Calculated p-value: {:.2f}".format(p1))
+print(f'Calculated p-value: {p1:.3f}')
 
 t1 = time.time()
 
-ty = mmct.mt_tester()
-ty.test_statistic = 'Prob'
-ty.n_samples = 30000
-
-p2 = ty.do_test(x, p)
-print("Calculated p-value: {:.2f}".format(p2))
-
-t2 = time.time()
-
 
 print('')
-print("Time 1: {:.4f}s".format(t1 - t0))
-print("Time 2: {:.4f}s".format(t2 - t1))
+print("Time: {:.4f}s".format(t1 - t0))

@@ -1,23 +1,7 @@
-import numpy as np
-import random
 from multiprocessing import Pool
-
-from . import stat
-
-
-# Generate a multinomially distributed set of observations
-
-def get_multinom(c_prob, rs):
-
-	res = np.zeros(c_prob.size)
-
-	for r in rs:
-		# TODO: binary search since c_prob should be increasing
-		i = 0
-		while r >= c_prob[i]:
-			i += 1
-		res[i] += 1
-	return res
+import numpy as np
+import numpy.typing as npt
+from scipy.stats import multinomial
 
 
 # Main class used for performing multinomial tests
@@ -27,8 +11,6 @@ class tester:
 	n_samples = 1000  # The number of Monte Carlo samples to generate
 	statistics = np.zeros(1)  # Test statistics of random samples
 
-	test_statistic = 'LLR'  # The test statistic to use (LLR or Prob)
-
 	# The test statistics can be fixed by setting fix to True. This prevents
 	# rerunning the Monte Carlo sampling when running a new test. This can
 	# be useful when testing or to save time (bias danger!)
@@ -36,29 +18,20 @@ class tester:
 
 	# Internal state objects
 	__prob = np.ones(1)
-	__c_prob = np.ones(1)
 	__n_obs = 0
 
-	def generate_sample_stat(self, index):
+	def generate_sample_stat(self, index: int) -> float:
 
 		# The index argument is irrelevant but necessary to make Pool.map work
 
-		# Each distribution need n observations
-		rs = np.zeros(self.__n_obs)
-		# Generate n random numbers in [0,1)
-		for j in range(0, self.__n_obs):
-			rs[j] = random.random()  # Thread safe
-
-		# Generate a multinomial draw from the probabilities in ps (using cps)
-		m = get_multinom(self.__c_prob, rs)
+		# Generate a multinomial draw from hypothesised distribution
+		m = multinomial.rvs(n=self.__n_obs, p=self.__prob, size=1)
 
 		# Calculate test statistic
-		if self.test_statistic.casefold() == 'prob'.casefold():
-			return stat.multinomialProb(m, self.__prob)
-		else:
-			return stat.multinomialLLR(m, self.__prob)
+		y: float = multinomial.pmf(m, n=self.__n_obs, p=self.__prob)
+		return y
 
-	def mc_runs(self):
+	def mc_runs(self) -> None:
 		# Reset statistics array
 		self.statistics = np.zeros(self.n_samples)
 
@@ -66,7 +39,8 @@ class tester:
 		for i in range(0, self.n_samples):
 			self.statistics[i] = self.generate_sample_stat(i)
 
-	def do_test(self, x, probs):
+	def do_test(self,
+		x: npt.NDArray[np.int_], probs: npt.NDArray[np.float_]) -> float:
 
 		if x.size != probs.size:
 			raise ValueError('Input arrays must have the same number of elements')
@@ -77,19 +51,9 @@ class tester:
 			self.__n_obs = np.sum(x)  # Total number of observations in x
 			self.__prob = probs.copy()
 
-			# First, generate a cumulative sum of the probabilities in ps
-			self.__c_prob = np.zeros(probs.size)
-			self.__c_prob[0] = probs[0]
-			for i in range(1, probs.size):
-				self.__c_prob[i] = self.__c_prob[i - 1] + probs[i]
-
 			self.mc_runs()
 
-		# Calculate statistic of x
-		if self.test_statistic.casefold() == 'prob'.casefold():
-			x_stat = stat.multinomialProb(x, probs)
-		else:
-			x_stat = stat.multinomialLLR(x, probs)
+		x_stat: float = multinomial.pmf(x, n=self.__n_obs, p=self.__prob)
 
 		# Count number of trials with statistic smaller than x
 		n_smaller = 0
@@ -108,7 +72,7 @@ class mt_tester(tester):
 	# (typically the number of logical processors)
 	threads = None
 
-	def mc_runs(self):
+	def mc_runs(self) -> None:
 
 		with Pool(processes=self.threads) as pool:
 			res = pool.map(self.generate_sample_stat, range(0, self.n_samples))
