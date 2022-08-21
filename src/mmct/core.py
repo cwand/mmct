@@ -1,4 +1,3 @@
-from multiprocessing import Pool
 import numpy as np
 import numpy.typing as npt
 from scipy.stats import multinomial
@@ -64,7 +63,7 @@ class tester:
 		if x.size != probs.size:
 			raise ValueError('Input arrays must have the same number of elements')
 
-		n_obs = np.sum(x)  # Total number of observations in x
+		n_obs = int(np.sum(x))  # Total number of observations in x
 
 		# Run samples if not fixed
 		if not self.fix:
@@ -78,19 +77,3 @@ class tester:
 			if s <= x_stat:
 				n_smaller += 1
 		return n_smaller / self.statistics.size
-
-
-# Derived class from tester that uses multithreading to speed up the monte carlo
-# sampling
-
-class mt_tester(tester):
-
-	# Number of threads to use. If None, the system default is used
-	# (typically the number of logical processors)
-	threads = None
-
-	def _mc_runs(self) -> None:
-
-		with Pool(processes=self.threads) as pool:
-			res = pool.map(self._generate_sample_stat, range(0, self.n_samples))
-		self.statistics = np.array(res)

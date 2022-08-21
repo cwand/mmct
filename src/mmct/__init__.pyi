@@ -16,11 +16,3 @@ class tester:
 
 	def do_test(self,
 		x: npt.NDArray[np.int_], probs: npt.NDArray[np.float_]) -> float: ...
-
-
-class mt_tester(tester):
-
-	threads: int
-
-
-__all__: list[str]
