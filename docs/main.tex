@@ -83,9 +83,17 @@ $x_1$ draws in bin 1, $x_2$ draws in bin 2 and so on:
 The probability density function (the probability of drawing exactly $x_1, x_2, 
 \ldots, x_k$ given $p_1, p_2, \ldots, p_k$) is
 \begin{equation}
-	f(x_1,\ldots, x_k;n,p_1,\ldots,p_k) = \frac{n!}{x_1! \cdots x_k!} p_1^{x_1} 
-	\cdots p_k^{x_k}
+	f(x_1,\ldots, x_k;n,p_1,\ldots,p_k) = f(x_i;n,p_i) = \frac{n!}{x_1! \cdots 
+	x_k!} p_1^{x_1} \cdots p_k^{x_k}.
 \end{equation}
+This probability will almost always be very small. For example, rolling a single
+D6 three times and getting 3, 4 and 5 eyes (in any order) is not unreasonable, 
+however the probability is only a bit above 3\%. To test whether the result is
+unreasonable we need to know if the observed outcome is \emph{more} unlikely 
+than other outcomes. For example rolling the D6 three times and getting 3 eyes 
+each time has a probability of just 0.4\%.
+
+ 
 
  
 \bibliographystyle{JHEP}
