@@ -6,9 +6,21 @@ Provides functionality for performing multinomial tests using monte carlo simula
 
 ## Background
 
-This library contain python code that can be used to test whether a given set of observations are likely to be drawn from a multinomial distribution with a given set of parameters \(probabilities for each case\). The test is done using Monte Carlo methods, and the mathematical background of the package can be found in the [docs folder](https://github.com/cwand/mmct/tree/main/docs).
+This library contain python code that can be used to test whether a given set of observations are
+likely to be drawn from a multinomial distribution with a given set of parameters (probabilities
+for each case). The test is done using Monte Carlo methods. A bunch of random samples from the
+hypothesised distribution is drawn and the probability of each sample is calculated.  These are all
+compared to the probability of the sample under test. The p-value of the null-hypothesis (that the 
+sample comes from the distribution) is simply the fraction of random samples with probability
+smaller than the sample under test.
 
-The library is inspired by [met](https://pypi.org/project/met/), which achieve the same objective as mmct, but does so by painstakingly enumerating every possible case for the given multinomial distribution and calculating the p-value exactly. While this is certainly preferable, it becomes very slow very quickly, so for performing many tests or tests with a large parameter space, a monte carlo approximation may be good enough. As already mentioned, mmct has also drawn inspiration from the [XNomial](https://cran.r-project.org/web/packages/XNomial/vignettes/XNomial.html) package, which performs an identical task in the R programming language.
+The library is inspired by [met](https://pypi.org/project/met/), which achieve the same objective
+as mmct, but does so by painstakingly enumerating every possible case for the given multinomial
+distribution and calculating the p-value exactly. While this is certainly preferable, it becomes
+very slow very quickly, so for performing many tests or tests with a large parameter space, a
+monte carlo approximation may be good enough. mmct has also drawn inspiration
+from the [XNomial](https://cran.r-project.org/web/packages/XNomial/vignettes/XNomial.html) package,
+which performs an identical task in the R programming language.
 
 ## Usage
 
@@ -18,9 +30,12 @@ The package is most easlily installed via pip:
 pip install mmct
 ```
 
-The source code is also available on GitHub and is free for use and modification: [mmct on GitHub](https://github.com/cwand/mmct/)
+The source code is also available on GitHub and is free for use and modification:
+[mmct on GitHub](https://github.com/cwand/mmct/)
 
-When the package has been installed, a test can be performed following the example below, in which we test whether a set of dice rolls could have been generated from rolling two fair dice 20 times and adding the eyes:
+When the package has been installed, a test can be performed following the example below, in which
+we test whether a set of dice rolls could have been generated from rolling two fair dice 20 times
+and adding the eyes:
 
 ```text
 import mmct
@@ -36,4 +51,6 @@ t.n_samples = 100000
 pval = t.do_test(x,p)
 ```
 
-The result of the test will of course vary \(unless the random simulator is seeded\), but should in general result in a p-value around 0.34, i.e. we cannot reject the hypothesis that the numbers above are taken from a fair dice rolling \(which they actually are\).
+The result of the test will of course vary (unless the random simulator is seeded), but should in
+general result in a p-value around 0.34, i.e. we cannot reject the hypothesis that the numbers
+above are taken from a fair dice rolling (which they actually are).
